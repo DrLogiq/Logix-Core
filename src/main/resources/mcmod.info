@@ -1,0 +1,14 @@
+[{
+  "modid": "logix_core",
+  "name": "Logix Core",
+  "description": "",
+  "version": "0.1a",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Dr. LOGiQ"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}]
