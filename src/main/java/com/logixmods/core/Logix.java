@@ -1,7 +1,6 @@
 package com.logixmods.core;
 
 import org.apache.logging.log4j.Logger;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 /** The primary source for all Logix mod references and some useful utilities */
@@ -58,6 +57,13 @@ public final class Logix
         }
 
         /** Get your message across */
+        public static void InfoIndented(Object sender, String message)
+        {
+            if (!initialized) { System.err.println("Logix Logger not initialized yet!"); return; }
+            out.info(CalculatePrefix(sender) + " // INFO ->   • " + message);
+        }
+
+        /** Get your message across */
         public static void Info(Object sender, String message)
         {
             Log(sender, message);
@@ -80,8 +86,8 @@ public final class Logix
         /** Make sure it's obvious who's sending the message */
         private static String CalculatePrefix(Object sender)
         {
-            String pkg = sender.getClass().getPackage().toString();
-            if (pkg.contains("logixmods.core"))
+            String pkg = sender.getClass().getPackage().toString().replace("package", "").trim();
+            if (pkg.startsWith("com.logixmods.core") || pkg.startsWith("com.logixmods.api"))
                 return Core.NAME;
             else
                 return "Unknown Mod";
@@ -98,10 +104,48 @@ public final class Logix
         public static final String SERVER_PROXY = "com.logixmods.core.proxy.ServerProxy";
     }
 
+    /** Returns whether or not the given string is a Logix mod ID */
+    public static boolean isLogixID(String value)
+    {
+        return value.equalsIgnoreCase(Core.ID);
+    }
+
+    /** Returns whether or not the given string is someone's poor attempt to immitate a Logix mod */
+    public static boolean isImmitatingLogixID(String value)
+    {
+        return value.contains(Core.ID);
+    }
+
+    /** Returns the current stage of initialization that Forge is in */
+    public static Phase getPhase()
+    {
+        return LogixCore.getPhase();
+    }
+
+    /** Returns the message that should be included when logging errors to do with other modders who're using the API */
+    public static String getReportMessage(String modID)
+    {
+        return "Please report this error to the author of the mod with the ID \"" + modID + "\".";
+    }
+
+    /** Returns the message that should be included when logging errors to do with my mod/s */
+    public static String getSelfReportMessage()
+    {
+        return "Please report this to Dr. LOGiQ (the author of Logix mods, of course).";
+    }
+
     /** A list of the available modules, which are part of the mod set */
     public enum Module
     {
         /** The core mod - a staple requirement for the other mods in the set, and a requirement for any mods that wish to make use of its API */
         Core
+    }
+
+    /** A list of the 3 key initialization stages of Forge */
+    public enum Phase
+    {
+        PreInitialization,
+        Initialization,
+        PostInitialization
     }
 }
